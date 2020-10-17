@@ -18,10 +18,10 @@ CREATE TABLE `users`
 DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms`
 (
-    `room_id`    BIGINT(20) NOT NULL AUTO_INCREMENT,
-    `xid`        BIGINT(20) NOT NULL,
-    `created_at` DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `room_id`    BIGINT(20)   NOT NULL AUTO_INCREMENT,
+    `xid`        VARCHAR(128) NOT NULL,
+    `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`room_id`),
     KEY `rooms_idx_01` (`xid`),
     KEY `rooms_idx_02` (`created_at`)
@@ -69,6 +69,7 @@ CREATE TABLE `balance_sprinkles`
     `room_id`             BIGINT(20)     NOT NULL,
     `count`               INTEGER        NOT NULL,
     `amount`              DECIMAL(16, 2) NOT NULL,
+    `expired_at`          DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_at`          DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`          DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`balance_sprinkle_id`),

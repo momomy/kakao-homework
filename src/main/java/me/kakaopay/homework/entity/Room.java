@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 LINE Corporation. All rights reserved.
- * LINE Corporation PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-
 package me.kakaopay.homework.entity;
 
 import javax.persistence.Column;
@@ -41,5 +36,5 @@ public class Room extends AbstractAuditingEntity {
     private Long id;
 
     @Column(name = "xid", updatable = false, nullable = false, unique = true)
-    private Long xid;
+    private String xid;
 }
