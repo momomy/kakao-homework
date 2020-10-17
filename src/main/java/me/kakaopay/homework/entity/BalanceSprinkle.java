@@ -21,16 +21,14 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
+@Setter(AccessLevel.PRIVATE)
 @Entity
-@Builder
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,8 +37,6 @@ import lombok.Setter;
 public class BalanceSprinkle extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 326282368896040865L;
-
-    private static final Duration SPRINKLE_DURATION = Duration.ofMinutes(10);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,4 +83,16 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
 
     @OneToMany(mappedBy = "balanceSprinkle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SprinkleTransaction> transactions;
+
+    public static BalanceSprinkle create(String token, User user, Room room, int count, BigDecimal amount, LocalDateTime expiredAt) {
+        BalanceSprinkle sprinkle = new BalanceSprinkle();
+        sprinkle.setToken(token);
+        sprinkle.setUser(user);
+        sprinkle.setRoom(room);
+        sprinkle.setCount(count);
+        sprinkle.setAmount(amount);
+        sprinkle.setExpiredAt(expiredAt);
+        return sprinkle;
+    }
+
 }

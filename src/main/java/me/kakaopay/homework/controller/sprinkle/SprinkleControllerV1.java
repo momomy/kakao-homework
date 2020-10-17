@@ -1,7 +1,5 @@
 package me.kakaopay.homework.controller.sprinkle;
 
-import java.time.LocalDateTime;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import me.kakaopay.homework.service.sprinkle.SprinkleService;
+import me.kakaopay.homework.service.sprinkle.vo.SprinkleCreateVo;
+import me.kakaopay.homework.service.sprinkle.vo.SprinkleVo;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +31,11 @@ public class SprinkleControllerV1 {
             @RequestHeader("X-USER-ID") @NotNull Long userXid,
             @RequestHeader("X-ROOM-ID") @NotBlank String roomXid,
             @Valid @RequestBody SprinkleCreateRequestDto requestDto) {
-        return SprinkleCreateResponseDto.of("token", LocalDateTime.now());
+        SprinkleVo sprinkleVo = sprinkleService.create(SprinkleCreateVo.of(userXid,
+                                                                           roomXid,
+                                                                           requestDto.getCount(),
+                                                                           requestDto.getAmount()));
+        return SprinkleCreateResponseDto.of(sprinkleVo.getToken(), sprinkleVo.getExpiredAt());
     }
 
     /**

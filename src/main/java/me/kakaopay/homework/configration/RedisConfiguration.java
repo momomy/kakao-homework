@@ -1,5 +1,7 @@
 package me.kakaopay.homework.configration;
 
+import java.math.BigDecimal;
+
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +33,19 @@ public class RedisConfiguration {
                                                        StringRedisSerializer redisKeySerializer,
                                                        GenericJackson2JsonRedisSerializer redisValueSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(redisKeySerializer);
+        redisTemplate.setValueSerializer(redisValueSerializer);
+        redisTemplate.setHashKeySerializer(redisKeySerializer);
+        redisTemplate.setHashValueSerializer(redisValueSerializer);
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, BigDecimal> decimalRedisTemplate(RedisConnectionFactory redisConnectionFactory,
+                                                                  StringRedisSerializer redisKeySerializer,
+                                                                  GenericJackson2JsonRedisSerializer redisValueSerializer) {
+        RedisTemplate<String, BigDecimal> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(redisKeySerializer);
         redisTemplate.setValueSerializer(redisValueSerializer);

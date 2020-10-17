@@ -1,6 +1,9 @@
 package me.kakaopay.homework.repository.sprinkle;
 
 import java.util.Optional;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import me.kakaopay.homework.entity.BalanceSprinkle;
 import me.kakaopay.homework.entity.QBalanceSprinkle;
@@ -33,5 +36,14 @@ public class BalanceSprinkleRepositoryImpl
                         .where(Q_BALANCE_SPRINKLE.token.eq(token))
                         .select(Q_BALANCE_SPRINKLE)
                         .fetchOne());
+    }
+
+    @Override
+    public Set<String> findTokens(User user) {
+        return Sets.newHashSet(
+                from(Q_BALANCE_SPRINKLE)
+                        .where(Q_BALANCE_SPRINKLE.user.eq(user))
+                        .select(Q_BALANCE_SPRINKLE.token)
+                        .fetch());
     }
 }

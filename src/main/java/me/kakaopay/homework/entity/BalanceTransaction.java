@@ -28,7 +28,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Builder
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
