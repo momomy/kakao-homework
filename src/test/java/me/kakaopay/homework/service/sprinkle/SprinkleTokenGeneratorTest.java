@@ -2,6 +2,8 @@ package me.kakaopay.homework.service.sprinkle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,15 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import me.kakaopay.homework.repository.sprinkle.BalanceSprinkleRepository;
-
 @RunWith(MockitoJUnitRunner.class)
 public class SprinkleTokenGeneratorTest {
 
     private static final long USER_ID = 1L;
 
     @Mock
-    private BalanceSprinkleRepository sprinkleRepository;
+    private SprinkleCacheManager sprinkleCacheManager;
 
     @InjectMocks
     private SprinkleTokenGenerator sprinkleTokenGenerator;
@@ -52,7 +52,7 @@ public class SprinkleTokenGeneratorTest {
         for (int i = 0; i < number.length(); i++) {
             token.add(String.valueOf(number.charAt(i)));
         }
-
+        when(sprinkleCacheManager.contain(any(String.class))).thenReturn(true);
         sprinkleTokenGenerator.generate(USER_ID, 1);
         fail("");
     }

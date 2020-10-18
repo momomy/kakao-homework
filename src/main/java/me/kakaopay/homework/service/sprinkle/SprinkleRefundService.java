@@ -42,7 +42,7 @@ public class SprinkleRefundService {
                        });
     }
 
-    public boolean isExpired(BalanceSprinkle sprinkle) {
+    private boolean isExpired(BalanceSprinkle sprinkle) {
         return sprinkle.isExpired()
                || 0 == calculateRefundAmount(sprinkle).compareTo(BigDecimal.ZERO);
     }
@@ -52,10 +52,5 @@ public class SprinkleRefundService {
                                               .map(BalanceSprinkleTransaction::getAmount)
                                               .reduce(BigDecimal.ZERO, BigDecimal::add);
         return sprinkle.getAmount().subtract(usedAmount);
-    }
-
-    private boolean isReceivedUser(BalanceSprinkle balanceSprinkle, long userId) {
-        return balanceSprinkle.getTransactions().stream()
-                              .anyMatch(transaction -> transaction.getUserId() == userId);
     }
 }
