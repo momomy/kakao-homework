@@ -28,7 +28,7 @@ public class SprinkleRefundService {
     @Transactional
     public void refund(SprinkleRefundVo vo) {
         sprinkleService.findNotRefund().stream()
-                       .filter(BalanceSprinkle::isExpired)
+                       .filter(this::isExpired)
                        .forEach(sprinkle -> {
                            BigDecimal refundAmount = calculateRefundAmount(sprinkle);
                            if (0 < refundAmount.compareTo(BigDecimal.ZERO)) {
@@ -40,6 +40,11 @@ public class SprinkleRefundService {
                            }
                            sprinkle.setStatus(SprinkleStatusType.REFUNDED);
                        });
+    }
+
+    public boolean isExpired(BalanceSprinkle sprinkle) {
+        return sprinkle.isExpired()
+               || 0 == calculateRefundAmount(sprinkle).compareTo(BigDecimal.ZERO);
     }
 
     private BigDecimal calculateRefundAmount(BalanceSprinkle sprinkle) {
