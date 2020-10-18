@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -80,16 +82,29 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
     @Column(name = "expired_at", nullable = false, updatable = false)
     private LocalDateTime expiredAt;
 
+    /**
+     * 뿌리기 상태
+     */
+    @Setter(AccessLevel.PUBLIC)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private SprinkleStatusType status;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sprinkle_transaction_id", nullable = false, updatable = false)
     private BalanceTransaction sprinkleTransaction;
 
+    @Setter(AccessLevel.PUBLIC)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "refund_transaction_id")
     private BalanceTransaction refundTransaction;
 
     @OneToMany(mappedBy = "balanceSprinkle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BalanceSprinkleTransaction> transactions = Lists.newArrayList();
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(this.expiredAt);
+    }
 
     public static BalanceSprinkle create(String token,
                                          long userId,
@@ -106,6 +121,7 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
         sprinkle.setAmount(amount);
         sprinkle.setExpiredAt(expiredAt);
         sprinkle.setSprinkleTransaction(sprinkleTransaction);
+        sprinkle.setStatus(SprinkleStatusType.CREATED);
         return sprinkle;
     }
 

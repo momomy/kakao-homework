@@ -29,12 +29,16 @@ CREATE TABLE `balance_sprinkles`
     `expired_at`              DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `sprinkle_transaction_id` BIGINT(20)     NOT NULL,
     `refund_transaction_id`   BIGINT(20)     NULL,
+    `status`                  VARCHAR(64)    NOT NULL,
     `created_at`              DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`              DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`balance_sprinkle_id`),
     KEY `balance_sprinkles_idx01` (`user_id`),
     KEY `balance_sprinkles_idx02` (`room_id`),
-    KEY `balance_sprinkles_idx03` (`created_at`)
+    KEY `balance_sprinkles_idx03` (`created_at`),
+    KEY `balance_sprinkles_idx04` (`sprinkle_transaction_id`),
+    KEY `balance_sprinkles_idx05` (`refund_transaction_id`),
+    KEY `balance_sprinkles_idx06` (`status`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='balance_sprinkles';
 

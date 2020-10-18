@@ -21,7 +21,9 @@ import me.kakaopay.homework.controller.sprinkle.dto.SprinkleCreateRequestDto;
 import me.kakaopay.homework.controller.sprinkle.dto.SprinkleCreateResponseDto;
 import me.kakaopay.homework.controller.sprinkle.dto.SprinkleDto;
 import me.kakaopay.homework.controller.sprinkle.dto.SprinkleTransactionDto;
-import me.kakaopay.homework.service.sprinkle.SprinkleService;
+import me.kakaopay.homework.service.sprinkle.SprinkleCreateService;
+import me.kakaopay.homework.service.sprinkle.SprinkleLookupService;
+import me.kakaopay.homework.service.sprinkle.SprinkleReceiveService;
 import me.kakaopay.homework.service.sprinkle.vo.SprinkleCreateVo;
 import me.kakaopay.homework.service.sprinkle.vo.SprinkleReceiveRequestVo;
 import me.kakaopay.homework.service.sprinkle.vo.SprinkleVo;
@@ -36,7 +38,11 @@ import me.kakaopay.homework.service.sprinkle.vo.SprinkleVo;
 @RequestMapping("/api/v1/sprinkle")
 public class SprinkleControllerV1 extends AbstractController {
 
-    private final SprinkleService sprinkleService;
+    private final SprinkleCreateService sprinkleCreateService;
+
+    private final SprinkleReceiveService sprinkleReceiveService;
+
+    private final SprinkleLookupService sprinkleLookupService;
 
     @PutMapping("/")
     @ResponseBody
@@ -44,10 +50,10 @@ public class SprinkleControllerV1 extends AbstractController {
             @RequestHeader("X-USER-ID") @NotNull Long userId,
             @RequestHeader("X-ROOM-ID") @NotBlank String roomId,
             @Valid @RequestBody SprinkleCreateRequestDto requestDto) {
-        SprinkleVo sprinkleVo = sprinkleService.create(SprinkleCreateVo.of(userId,
-                                                                           roomId,
-                                                                           requestDto.getCount(),
-                                                                           requestDto.getAmount()));
+        SprinkleVo sprinkleVo = sprinkleCreateService.create(SprinkleCreateVo.of(userId,
+                                                                                 roomId,
+                                                                                 requestDto.getCount(),
+                                                                                 requestDto.getAmount()));
         return SprinkleCreateResponseDto.of(sprinkleVo.getToken(), sprinkleVo.getExpiredAt());
     }
 
@@ -60,7 +66,7 @@ public class SprinkleControllerV1 extends AbstractController {
             @RequestHeader("X-USER-ID") @NotNull Long userId,
             @RequestHeader("X-ROOM-ID") @NotBlank String roomId,
             @PathVariable(value = "token") @NotBlank String token) {
-        return sprinkleService.receive(SprinkleReceiveRequestVo.of(userId, roomId, token)).toDto();
+        return sprinkleReceiveService.receive(SprinkleReceiveRequestVo.of(userId, roomId, token)).toDto();
     }
 
     /**
@@ -68,9 +74,9 @@ public class SprinkleControllerV1 extends AbstractController {
      */
     @GetMapping("/{token}")
     @ResponseBody
-    public SprinkleDto get(
+    public SprinkleDto lookup(
             @RequestHeader("X-USER-ID") @NotNull Long userId,
             @PathVariable(value = "token") @NotBlank String token) {
-        return sprinkleService.get(userId, token).toDto();
+        return sprinkleLookupService.lookup(userId, token).toDto();
     }
 }
