@@ -4,8 +4,10 @@ import com.google.common.base.Joiner;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import me.kakaopay.homework.common.lock.Lockable;
 
+@ToString
 @AllArgsConstructor
 @Getter
 public class SprinkleReceiveRequestVo implements Lockable {

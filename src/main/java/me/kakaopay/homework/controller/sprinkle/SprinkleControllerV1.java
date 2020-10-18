@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import me.kakaopay.homework.controller.common.AbstractController;
 import me.kakaopay.homework.controller.sprinkle.dto.SprinkleCreateRequestDto;
 import me.kakaopay.homework.controller.sprinkle.dto.SprinkleCreateResponseDto;
 import me.kakaopay.homework.controller.sprinkle.dto.SprinkleDto;
@@ -28,10 +30,11 @@ import me.kakaopay.homework.service.sprinkle.vo.SprinkleVo;
         value = "Sprinkle V1 API",
         tags = "Sprinkle V1 API"
 )
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/sprinkle")
-public class SprinkleControllerV1 {
+public class SprinkleControllerV1 extends AbstractController {
 
     private final SprinkleService sprinkleService;
 
