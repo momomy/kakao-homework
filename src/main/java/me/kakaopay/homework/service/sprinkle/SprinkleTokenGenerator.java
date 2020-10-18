@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import me.kakaopay.homework.entity.User;
 import me.kakaopay.homework.exception.TokenGenerationException;
 import me.kakaopay.homework.repository.sprinkle.BalanceSprinkleRepository;
 
@@ -21,17 +20,18 @@ class SprinkleTokenGenerator {
 
     private final BalanceSprinkleRepository balanceSprinkleRepository;
 
+    private final SprinkleCacheManager sprinkleCacheManager;
+
     private static final int RETRY_COUNT = 10;
 
     @Transactional(readOnly = true, propagation = Propagation.MANDATORY)
-    public String generate(User user, int length) {
-        final Set<String> tokenSet = balanceSprinkleRepository.findTokens(user);
+    public String generate(long userId, int length) {
         for (int i = 0; i < RETRY_COUNT; i++) {
             final String token = RandomStringUtils.randomAlphanumeric(length);
-            if (!tokenSet.contains(token)) {
+            if (!(sprinkleCacheManager.contain(token))) {
                 return token;
             }
         }
-        throw new TokenGenerationException("can not generate sprinkle token. user: " + user.getXid());
+        throw new TokenGenerationException("can not generate sprinkle token. user: " + userId);
     }
 }

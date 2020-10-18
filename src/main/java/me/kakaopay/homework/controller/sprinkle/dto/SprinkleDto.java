@@ -1,4 +1,4 @@
-package me.kakaopay.homework.controller.sprinkle;
+package me.kakaopay.homework.controller.sprinkle.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

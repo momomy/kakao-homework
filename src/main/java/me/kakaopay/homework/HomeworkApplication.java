@@ -6,9 +6,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import me.kakaopay.homework.configration.RedisConfiguration;
+import me.kakaopay.homework.configration.SwaggerConfiguration;
 
 @EnableJpaAuditing
-@Import({ RedisConfiguration.class })
+@Import({ RedisConfiguration.class, SwaggerConfiguration.class })
 @SpringBootApplication
 public class HomeworkApplication {
 

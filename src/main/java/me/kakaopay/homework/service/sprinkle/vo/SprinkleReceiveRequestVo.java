@@ -1,7 +1,5 @@
 package me.kakaopay.homework.service.sprinkle.vo;
 
-import java.math.BigDecimal;
-
 import com.google.common.base.Joiner;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +8,7 @@ import me.kakaopay.homework.common.lock.Lockable;
 
 @AllArgsConstructor
 @Getter
-public class SprinkleCreateVo implements Lockable {
+public class SprinkleReceiveRequestVo implements Lockable {
     /**
      * User ID
      */
@@ -20,20 +18,16 @@ public class SprinkleCreateVo implements Lockable {
      */
     private final String roomId;
     /**
-     * 뿌릴 사람 수
+     * Token
      */
-    private final int count;
-    /**
-     * 뿌릴 금액
-     */
-    private final BigDecimal amount;
+    private final String token;
 
     @Override
     public String getLockKey() {
-        return Joiner.on('-').join(userId, roomId);
+        return Joiner.on('-').join(roomId, token);
     }
 
-    public static SprinkleCreateVo of(long userId, String roomId, int count, BigDecimal amount) {
-        return new SprinkleCreateVo(userId, roomId, count, amount);
+    public static SprinkleReceiveRequestVo of(long userId, String roomId, String token) {
+        return new SprinkleReceiveRequestVo(userId, roomId, token);
     }
 }

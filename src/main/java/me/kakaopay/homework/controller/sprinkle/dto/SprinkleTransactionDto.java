@@ -1,4 +1,4 @@
-package me.kakaopay.homework.controller.sprinkle;
+package me.kakaopay.homework.controller.sprinkle.dto;
 
 import java.math.BigDecimal;
 
@@ -12,14 +12,14 @@ public class SprinkleTransactionDto {
     /**
      * 받은 유저
      */
-    private final long userXid;
+    private final long userId;
 
     /**
      * 받은 금액
      */
     private final BigDecimal amount;
 
-    public static SprinkleTransactionDto of(long userXid, BigDecimal amount) {
-        return new SprinkleTransactionDto(userXid, amount);
+    public static SprinkleTransactionDto of(long userId, BigDecimal amount) {
+        return new SprinkleTransactionDto(userId, amount);
     }
 }

@@ -13,14 +13,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import me.kakaopay.homework.controller.sprinkle.dto.SprinkleCreateRequestDto;
+import me.kakaopay.homework.controller.sprinkle.dto.SprinkleCreateResponseDto;
+import me.kakaopay.homework.controller.sprinkle.dto.SprinkleDto;
+import me.kakaopay.homework.controller.sprinkle.dto.SprinkleTransactionDto;
 import me.kakaopay.homework.service.sprinkle.SprinkleService;
 import me.kakaopay.homework.service.sprinkle.vo.SprinkleCreateVo;
+import me.kakaopay.homework.service.sprinkle.vo.SprinkleReceiveRequestVo;
 import me.kakaopay.homework.service.sprinkle.vo.SprinkleVo;
 
+@Api(
+        value = "Sprinkle V1 API",
+        tags = "Sprinkle V1 API"
+)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/sprinkle")
+@RequestMapping("/api/v1/sprinkle")
 public class SprinkleControllerV1 {
 
     private final SprinkleService sprinkleService;
@@ -28,14 +38,26 @@ public class SprinkleControllerV1 {
     @PutMapping("/")
     @ResponseBody
     public SprinkleCreateResponseDto create(
-            @RequestHeader("X-USER-ID") @NotNull Long userXid,
-            @RequestHeader("X-ROOM-ID") @NotBlank String roomXid,
+            @RequestHeader("X-USER-ID") @NotNull Long userId,
+            @RequestHeader("X-ROOM-ID") @NotBlank String roomId,
             @Valid @RequestBody SprinkleCreateRequestDto requestDto) {
-        SprinkleVo sprinkleVo = sprinkleService.create(SprinkleCreateVo.of(userXid,
-                                                                           roomXid,
+        SprinkleVo sprinkleVo = sprinkleService.create(SprinkleCreateVo.of(userId,
+                                                                           roomId,
                                                                            requestDto.getCount(),
                                                                            requestDto.getAmount()));
         return SprinkleCreateResponseDto.of(sprinkleVo.getToken(), sprinkleVo.getExpiredAt());
+    }
+
+    /**
+     * 받기 API
+     */
+    @PutMapping("/{token}")
+    @ResponseBody
+    public SprinkleTransactionDto receive(
+            @RequestHeader("X-USER-ID") @NotNull Long userId,
+            @RequestHeader("X-ROOM-ID") @NotBlank String roomId,
+            @PathVariable(value = "token") @NotBlank String token) {
+        return sprinkleService.receive(SprinkleReceiveRequestVo.of(userId, roomId, token)).toDto();
     }
 
     /**
@@ -44,8 +66,8 @@ public class SprinkleControllerV1 {
     @GetMapping("/{token}")
     @ResponseBody
     public SprinkleDto get(
-            @RequestHeader("X-USER-ID") @NotNull Long userXid,
+            @RequestHeader("X-USER-ID") @NotNull Long userId,
             @PathVariable(value = "token") @NotBlank String token) {
-        return sprinkleService.get(userXid, token).toDto();
+        return sprinkleService.get(userId, token).toDto();
     }
 }

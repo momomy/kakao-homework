@@ -12,17 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import me.kakaopay.homework.entity.User;
 import me.kakaopay.homework.exception.TokenGenerationException;
 import me.kakaopay.homework.repository.sprinkle.BalanceSprinkleRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SprinkleTokenGeneratorTest {
 
-    private static final long XID = 1L;
+    private static final long USER_ID = 1L;
 
     @Mock
     private BalanceSprinkleRepository sprinkleRepository;
@@ -32,13 +30,12 @@ public class SprinkleTokenGeneratorTest {
 
     @Test
     public void generate() {
-        User user = Mockito.mock(User.class);
 
-        when(sprinkleRepository.findTokens(user)).thenReturn(Sets.newHashSet());
+        when(sprinkleRepository.findTokens(USER_ID)).thenReturn(Sets.newHashSet());
 
-        assertThat(sprinkleTokenGenerator.generate(user, 3)).hasSize(3);
-        assertThat(sprinkleTokenGenerator.generate(user, 3)).hasSize(3);
-        assertThat(sprinkleTokenGenerator.generate(user, 3)).hasSize(3);
+        assertThat(sprinkleTokenGenerator.generate(USER_ID, 3)).hasSize(3);
+        assertThat(sprinkleTokenGenerator.generate(USER_ID, 3)).hasSize(3);
+        assertThat(sprinkleTokenGenerator.generate(USER_ID, 3)).hasSize(3);
     }
 
     @Test(expected = TokenGenerationException.class)
@@ -61,12 +58,9 @@ public class SprinkleTokenGeneratorTest {
             token.add(String.valueOf(number.charAt(i)));
         }
 
-        User user = Mockito.mock(User.class);
-        when(user.getXid()).thenReturn(XID);
+        when(sprinkleRepository.findTokens(USER_ID)).thenReturn(token);
 
-        when(sprinkleRepository.findTokens(user)).thenReturn(token);
-
-        sprinkleTokenGenerator.generate(user, 1);
+        sprinkleTokenGenerator.generate(USER_ID, 1);
         fail("");
     }
 }

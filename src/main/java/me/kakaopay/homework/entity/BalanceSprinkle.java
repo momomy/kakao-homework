@@ -1,7 +1,6 @@
 package me.kakaopay.homework.entity;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,12 +11,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.google.common.collect.Lists;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -52,16 +51,14 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
     /**
      * 뿌리기를 한 User
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false, updatable = false)
+    private Long userId;
 
     /**
      * 뿌리기를 한 Room
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "room_id", nullable = false, updatable = false)
-    private Room room;
+    @Column(name = "room_id", nullable = false, updatable = false, length = 128)
+    private String roomId;
 
     /**
      * 뿌리기 개수
@@ -82,13 +79,14 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
     private LocalDateTime expiredAt;
 
     @OneToMany(mappedBy = "balanceSprinkle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SprinkleTransaction> transactions;
+    private List<BalanceSprinkleTransaction> transactions = Lists.newArrayList();
 
-    public static BalanceSprinkle create(String token, User user, Room room, int count, BigDecimal amount, LocalDateTime expiredAt) {
+    public static BalanceSprinkle create(
+            String token, long userId, String roomId, int count, BigDecimal amount, LocalDateTime expiredAt) {
         BalanceSprinkle sprinkle = new BalanceSprinkle();
         sprinkle.setToken(token);
-        sprinkle.setUser(user);
-        sprinkle.setRoom(room);
+        sprinkle.setUserId(userId);
+        sprinkle.setRoomId(roomId);
         sprinkle.setCount(count);
         sprinkle.setAmount(amount);
         sprinkle.setExpiredAt(expiredAt);

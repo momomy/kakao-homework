@@ -47,6 +47,9 @@ dependencies {
 
     implementation 'org.hibernate:hibernate-core:5.4.22.Final'
     implementation 'com.querydsl:querydsl-jpa'
+
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 }
 
 sourceSets {

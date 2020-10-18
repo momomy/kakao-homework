@@ -8,13 +8,14 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import me.kakaopay.homework.controller.sprinkle.SprinkleDto;
+import me.kakaopay.homework.controller.sprinkle.dto.SprinkleDto;
 import me.kakaopay.homework.entity.BalanceSprinkle;
 
 @ToString
 @AllArgsConstructor
 @Getter
 public class SprinkleVo {
+    private final long id;
     /**
      * 뿌리기 Token
      */
@@ -22,11 +23,11 @@ public class SprinkleVo {
     /**
      * 뿌리기를 한 Room Id
      */
-    private final String roomXid;
+    private final String roomId;
     /**
      * 뿌리기를 한 User Id
      */
-    private final long userXid;
+    private final long userId;
     /**
      * 뿌린 금액
      */
@@ -56,9 +57,10 @@ public class SprinkleVo {
     }
 
     public static SprinkleVo of(BalanceSprinkle sprinkle) {
-        return new SprinkleVo(sprinkle.getToken(),
-                              sprinkle.getRoom().getXid(),
-                              sprinkle.getUser().getXid(),
+        return new SprinkleVo(sprinkle.getId(),
+                              sprinkle.getToken(),
+                              sprinkle.getRoomId(),
+                              sprinkle.getUserId(),
                               sprinkle.getAmount(),
                               sprinkle.getCount(),
                               sprinkle.getCreatedAt(),
