@@ -18,16 +18,16 @@ public class BalanceTransactionService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public BalanceTransaction deposit(
-            long userId, BigDecimal amount, long referenceUserId, BalanceReferenceType referenceType) {
+            long userId, BigDecimal amount, BalanceReferenceType referenceType) {
         return balanceTransactionRepository.save(
-                BalanceTransaction.deposit(userId, amount, referenceUserId, referenceType));
+                BalanceTransaction.deposit(userId, amount, referenceType));
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
     public BalanceTransaction withdraw(
-            long userId, BigDecimal amount, long referenceUserId, BalanceReferenceType referenceType) {
+            long userId, BigDecimal amount, BalanceReferenceType referenceType) {
         return balanceTransactionRepository.save(
-                BalanceTransaction.withdraw(userId, amount, referenceUserId, referenceType));
+                BalanceTransaction.withdraw(userId, amount, referenceType));
     }
 
 }

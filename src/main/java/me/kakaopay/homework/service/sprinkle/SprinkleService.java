@@ -13,8 +13,11 @@ import lombok.RequiredArgsConstructor;
 import me.kakaopay.homework.common.lock.DistributeLock;
 import me.kakaopay.homework.common.lock.LockCategory;
 import me.kakaopay.homework.common.lock.SimpleWaitDistributeLock;
+import me.kakaopay.homework.entity.BalanceReferenceType;
 import me.kakaopay.homework.entity.BalanceSprinkle;
+import me.kakaopay.homework.entity.BalanceTransaction;
 import me.kakaopay.homework.repository.sprinkle.BalanceSprinkleRepository;
+import me.kakaopay.homework.service.balance.BalanceTransactionService;
 import me.kakaopay.homework.service.sprinkle.exception.SprinkleAlreadyReceiveException;
 import me.kakaopay.homework.service.sprinkle.exception.SprinkleExpiredException;
 import me.kakaopay.homework.service.sprinkle.exception.SprinkleNotFoundException;
@@ -40,18 +43,25 @@ public class SprinkleService {
 
     private final SprinkleTransactionService sprinkleTransactionService;
 
+    private final BalanceTransactionService balanceTransactionService;
+
     @DistributeLock(LockCategory.SPRINKLE_CREATE)
     @Transactional
     public SprinkleVo create(SprinkleCreateVo vo) {
         final String token = tokenGenerator.generate(vo.getUserId(), TOKEN_LENGTH);
         final LocalDateTime sprinkleExpiredAt = LocalDateTime.now().plusSeconds(SPRINKLE_DURATION.getSeconds());
+
+        final BalanceTransaction sprinkleTransaction = balanceTransactionService.withdraw(
+                vo.getUserId(), vo.getAmount(), BalanceReferenceType.SPRINKLE);
+
         final SprinkleVo sprinkleVo = SprinkleVo.of(
                 sprinkleRepository.save(BalanceSprinkle.create(token,
                                                                vo.getUserId(),
                                                                vo.getRoomId(),
                                                                vo.getCount(),
                                                                vo.getAmount(),
-                                                               sprinkleExpiredAt)));
+                                                               sprinkleExpiredAt,
+                                                               sprinkleTransaction)));
 
         final List<BigDecimal> distributed = SprinkleAmountDistributor.distribute(vo.getAmount(),
                                                                                   vo.getCount());

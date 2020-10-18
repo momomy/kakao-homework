@@ -25,7 +25,7 @@ public class SprinkleTransactionService {
     @Transactional(propagation = Propagation.MANDATORY)
     public SprinkleTransactionVo insert(BalanceSprinkle balanceSprinkle, long userId, BigDecimal amount) {
         final BalanceTransaction balanceTransaction = balanceTransactionService.deposit(
-                userId, amount, balanceSprinkle.getUserId(), BalanceReferenceType.SPRINKLE_RECEIVE);
+                userId, amount, BalanceReferenceType.SPRINKLE_RECEIVE);
 
         final BalanceSprinkleTransaction sprinkleTransaction = sprinkleTransactionRepository.save(
                 BalanceSprinkleTransaction.create(balanceSprinkle, userId, amount, balanceTransaction));

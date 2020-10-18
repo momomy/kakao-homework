@@ -47,9 +47,6 @@ public class BalanceTransaction extends AbstractAuditingEntity {
     @Column(name = "amount", nullable = false, updatable = false)
     private BigDecimal amount;
 
-    @Column(name = "reference_user_id", nullable = false, updatable = false)
-    private long referenceUserId;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "reference_type", length = 64, nullable = false, updatable = false)
     private BalanceReferenceType referenceType;
@@ -57,25 +54,23 @@ public class BalanceTransaction extends AbstractAuditingEntity {
     public BalanceTransaction(long userId,
                               BalanceTransactionType transactionType,
                               BigDecimal amount,
-                              long referenceUserId,
                               BalanceReferenceType referenceType) {
         this.userId = userId;
         this.transactionType = transactionType;
         this.amount = amount;
-        this.referenceUserId = referenceUserId;
         this.referenceType = referenceType;
     }
 
     public static BalanceTransaction deposit(
-            long userId, BigDecimal amount, long referenceUserId, BalanceReferenceType referenceType) {
+            long userId, BigDecimal amount, BalanceReferenceType referenceType) {
         return new BalanceTransaction(
-                userId, BalanceTransactionType.DEPOSIT, amount, referenceUserId, referenceType);
+                userId, BalanceTransactionType.DEPOSIT, amount, referenceType);
     }
 
     public static BalanceTransaction withdraw(
-            long userId, BigDecimal amount, long referenceUserId, BalanceReferenceType referenceType) {
+            long userId, BigDecimal amount, BalanceReferenceType referenceType) {
         return new BalanceTransaction(
-                userId, BalanceTransactionType.WITHDRAW, amount, referenceUserId, referenceType);
+                userId, BalanceTransactionType.WITHDRAW, amount, referenceType);
     }
 
 }

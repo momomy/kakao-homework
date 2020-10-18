@@ -11,7 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -78,11 +80,24 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
     @Column(name = "expired_at", nullable = false, updatable = false)
     private LocalDateTime expiredAt;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sprinkle_transaction_id", nullable = false, updatable = false)
+    private BalanceTransaction sprinkleTransaction;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "refund_transaction_id")
+    private BalanceTransaction refundTransaction;
+
     @OneToMany(mappedBy = "balanceSprinkle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BalanceSprinkleTransaction> transactions = Lists.newArrayList();
 
-    public static BalanceSprinkle create(
-            String token, long userId, String roomId, int count, BigDecimal amount, LocalDateTime expiredAt) {
+    public static BalanceSprinkle create(String token,
+                                         long userId,
+                                         String roomId,
+                                         int count,
+                                         BigDecimal amount,
+                                         LocalDateTime expiredAt,
+                                         BalanceTransaction sprinkleTransaction) {
         BalanceSprinkle sprinkle = new BalanceSprinkle();
         sprinkle.setToken(token);
         sprinkle.setUserId(userId);
@@ -90,6 +105,7 @@ public class BalanceSprinkle extends AbstractAuditingEntity {
         sprinkle.setCount(count);
         sprinkle.setAmount(amount);
         sprinkle.setExpiredAt(expiredAt);
+        sprinkle.setSprinkleTransaction(sprinkleTransaction);
         return sprinkle;
     }
 
